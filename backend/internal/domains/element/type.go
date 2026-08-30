@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// Element type defined in DB
 type Type struct {
 	ID  int64
 	Key string

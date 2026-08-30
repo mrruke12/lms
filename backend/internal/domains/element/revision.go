@@ -13,28 +13,24 @@ type Revision struct {
 	lessonID   uuid.UUID
 	parentID   *uuid.UUID
 	typ        string
-	assessable bool
+	assessment AssessmentType
 	config     json.RawMessage
 
 	CreatedAt time.Time
-	DeletedAt *time.Time
-
-	CreatedBy uuid.UUID
-	DeletedBy *uuid.UUID
 }
 
 func NewRevision(
 	lessonID uuid.UUID,
 	parentID *uuid.UUID,
 	typ string,
-	assessable bool,
+	assessment AssessmentType,
 	config json.RawMessage,
 ) *Revision {
 	return &Revision{
 		lessonID:   lessonID,
 		parentID:   parentID,
 		typ:        typ,
-		assessable: assessable,
+		assessment: assessment,
 		config:     config,
 	}
 }
@@ -62,8 +58,8 @@ func (e *Revision) Type() string {
 	return e.typ
 }
 
-func (e *Revision) Assessable() bool {
-	return e.assessable
+func (e *Revision) Assessment() AssessmentType {
+	return e.assessment
 }
 
 func (e *Revision) ConfigRaw() json.RawMessage {

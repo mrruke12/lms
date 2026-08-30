@@ -2,7 +2,6 @@ package lesson
 
 import (
 	"regexp"
-	"slices"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,23 +9,24 @@ import (
 )
 
 type Lesson struct {
-	id     uuid.UUID
-	name   string
-	status LessonStatus
+	id       uuid.UUID
+	authorID uuid.UUID
+	version  uuid.UUID
+	name     string
+	status   Status
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time
 
-	CreatedBy uuid.UUID
 	UpdatedBy uuid.UUID
 	DeletedBy *uuid.UUID
 }
 
-func NewLesson(name string) *Lesson {
+func NewLesson(authorID uuid.UUID, name string) *Lesson {
 	return &Lesson{
 		name:   name,
-		status: Status.Draft,
+		status: StatusDraft,
 	}
 }
 
@@ -34,29 +34,13 @@ func NewLesson(name string) *Lesson {
 Domain rules
 */
 
-var statusTransitions = map[LessonStatus][]LessonStatus{
-	Status.Draft: {
-		Status.Published,
-	},
-	Status.Published: {
-		Status.Editing,
-	},
-	Status.Editing: {
-		Status.Published,
-		Status.Archived,
-	},
-	Status.Archived: {
-		Status.Draft,
-	},
-}
-
 var isTrimmedRegexp = regexp.MustCompile(`^\S.*\S$`)
 
 const nameMinLen = 6
 const nameMaxLen = 128
 
 func (l *Lesson) CanEdit() bool {
-	if l.status == Status.Published || l.status == Status.Archived {
+	if l.status == StatusPublished || l.status == StatusArchived {
 		return false
 	}
 
@@ -67,10 +51,12 @@ func (l *Lesson) CanEdit() bool {
 Setters
 */
 
-func (l *Lesson) SetStatus(status LessonStatus) error {
-	transitions := statusTransitions[l.status]
+func (l *Lesson) SetStatus(status Status) error {
+	if !IsValidStatus(status) {
+		return apperr.InvalidStatus(string(status))
+	}
 
-	if slices.Contains(transitions, status) == false {
+	if !statusTransitions.CanTransition(l.status, status) {
 		return apperr.InvalidStatusTransition(string(l.status), string(status))
 	}
 
@@ -78,7 +64,7 @@ func (l *Lesson) SetStatus(status LessonStatus) error {
 }
 
 func (l *Lesson) SetName(name string) error {
-	if isTrimmedRegexp.MatchString(name) == false {
+	if !isTrimmedRegexp.MatchString(name) {
 		return apperr.InvalidFieldFormat("Name", "must start and end with non-whitespace character")
 	}
 
@@ -99,6 +85,10 @@ func (l *Lesson) SetName(name string) error {
 Getters
 */
 
+func (l *Lesson) Version() uuid.UUID {
+	return l.version
+}
+
 func (l *Lesson) ID() uuid.UUID {
 	return l.id
 }
@@ -107,6 +97,6 @@ func (l *Lesson) Name() string {
 	return l.name
 }
 
-func (l *Lesson) Status() LessonStatus {
+func (l *Lesson) Status() Status {
 	return l.status
 }

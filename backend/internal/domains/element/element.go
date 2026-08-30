@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mrruke12/lms/internal/apperr"
 )
 
 type Element struct {
@@ -13,30 +12,25 @@ type Element struct {
 	lessonID   uuid.UUID
 	parentID   *uuid.UUID
 	typ        string
-	assessable bool
+	assessment AssessmentType
 	config     json.RawMessage
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt *time.Time
-
-	CreatedBy uuid.UUID
-	UpdatedBy uuid.UUID
-	DeletedBy *uuid.UUID
 }
 
 func NewElement(
 	lessonID uuid.UUID,
 	parentID *uuid.UUID,
 	typ string,
-	assessable bool,
+	assessment AssessmentType,
 	config json.RawMessage,
 ) *Element {
 	return &Element{
 		lessonID:   lessonID,
 		parentID:   parentID,
 		typ:        typ,
-		assessable: assessable,
+		assessment: assessment,
 		config:     config,
 	}
 }
@@ -50,9 +44,14 @@ func (e *Element) SetParentID(id *uuid.UUID) {
 }
 
 func (e *Element) SetConfig(config json.RawMessage) error {
-	// TODO: define config by type and validate it
-	if json.Valid(config) == false {
-		return apperr.InvalidFieldFormat("Config", "invalid JSON")
+	if err := validateJSON(elementSchema, config); err != nil {
+		return err
+	}
+
+	if e.assessment != Assessment.None {
+		if err := validateJSON(assessmentSchema, config); err != nil {
+			return err
+		}
 	}
 
 	e.config = config
@@ -80,8 +79,8 @@ func (e *Element) Type() string {
 	return e.typ
 }
 
-func (e *Element) Assessable() bool {
-	return e.assessable
+func (e *Element) Assessment() AssessmentType {
+	return e.assessment
 }
 
 func (e *Element) ConfigRaw() json.RawMessage {
@@ -104,7 +103,7 @@ func (e *Element) ToRevision() *Revision {
 		lessonID:   e.lessonID,
 		parentID:   e.parentID,
 		typ:        e.typ,
-		assessable: e.assessable,
+		assessment: e.assessment,
 		config:     e.ConfigRaw(),
 	}
 }

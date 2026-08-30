@@ -10,6 +10,13 @@ func Domain(code, message string) *AppError {
 	}
 }
 
+func InvalidStatus(status string) *AppError {
+	return Domain(
+		"invalid_status",
+		fmt.Sprintf("invalid status: %s", status),
+	)
+}
+
 func InvalidStatusTransition(from, to string) *AppError {
 	return Domain(
 		"invalid_status_transition",
@@ -21,5 +28,12 @@ func InvalidFieldFormat(field, reason string) *AppError {
 	return Domain(
 		"invalid_field_format",
 		fmt.Sprintf("invalid field format for %s: %s", field, reason),
+	)
+}
+
+func InvalidJSONSchema(reason string) *AppError {
+	return Domain(
+		"invalid_json_schema",
+		reason,
 	)
 }

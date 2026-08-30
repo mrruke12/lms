@@ -5,17 +5,14 @@ import (
 	"github.com/mrruke12/lms/internal/domains/element"
 )
 
-type UpdateEngine struct {
-}
-
 // Reports whether the element differs from its latest revision
-func (e *UpdateEngine) HasDiff(el *element.Element, rev *element.Revision) bool {
+func HasDiff(el *element.Element, rev *element.Revision) bool {
 	return el.ParentID() != rev.ParentID() ||
 		!element.CompareConfigs(el, rev)
 }
 
 // Computes new revisions just for changed elements
-func (e *UpdateEngine) ComputeRevisions(els []element.Element, revs []element.Revision) []element.Revision {
+func ComputeRevisions(els []element.Element, revs []element.Revision) []element.Revision {
 	res := make([]element.Revision, 0)
 	cache := make(map[uuid.UUID]*element.Revision, len(revs))
 
@@ -28,7 +25,8 @@ func (e *UpdateEngine) ComputeRevisions(els []element.Element, revs []element.Re
 		el := &els[i]
 		rev := cache[el.ID()]
 
-		if rev != nil && e.HasDiff(el, rev) {
+		// if rev is nil then it's a new element so we must create revision, otherwise we create it if there's difference
+		if rev == nil || HasDiff(el, rev) {
 			res = append(res, *el.ToRevision())
 		}
 	}

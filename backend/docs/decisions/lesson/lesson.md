@@ -1,8 +1,13 @@
 # Versioning
 #### Problem
-What happens if an author wants to change a lesson already completed or being in work by students? In first scenario nothing scary happens - students just see an updated lesson with their answers (where tasks didn't change) and the score **stays the same** (the score is immutable since the lesson is marked as completed by the student); but the second scenario may cause a problem if tasks changed (correct answer altered, task deleted, etc) so server can't handle answer check. 
+What if the lesson was already completed by some students but the teacher decides to change it? In this scenario score stays immutable, however the content of the lesson is altered therefore user won't be able to see the old version of the lesson and his answers properly. 
 
 #### Solution
-1. Determine the lesson lifecycle (status such as draft, published, editing, archived);
-2. Use versioning.
-Versioning here solves the problem of 
+1. Define a lifecycle of the lesson (draft-edit-published-archived statuses);
+2. Define version field in the Lesson model;
+3. Define a table to store lesson version snapshots; 
+4. When the lesson is published do:
+	1. Compare actual elements with the latest revisions;
+	2. If an element is changed since the latest revision or is new then create new revision of this element;
+	3. Take a snapshot of the lesson (update the version in the lesson table, and then write ids of all revisions with the latest created_at with the reference to this lesson version).
+5. Now bound students completions to the lesson version as well so even if the lesson is changed student still can access the original view.
