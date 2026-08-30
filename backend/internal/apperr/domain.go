@@ -43,6 +43,6 @@ func InvalidJSONSchema(reason string) *AppError {
 func ConstraintViolation(constraint, violation string) *AppError {
 	return Domain(
 		"constraint_violation",
-		fmt.Sprintf("constraint violated for %s: %s", violation),
+		fmt.Sprintf("constraint violated for %s: %s", constraint, violation),
 	)
 }
