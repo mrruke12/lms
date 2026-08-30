@@ -47,6 +47,10 @@ func (a *Assessment) SetGrade(grade int16) error {
 		return apperr.InvalidFieldFormat("Grade", "must be in range 0-100")
 	}
 
+	if a.status == StatusEvaluated {
+		return apperr.ConstraintViolation("Status", "cannot change the grade of evaluated assessment")
+	}
+
 	a.grade = grade
 
 	return nil

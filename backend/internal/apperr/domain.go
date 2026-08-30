@@ -1,6 +1,8 @@
 package apperr
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func Domain(code, message string) *AppError {
 	return &AppError{
@@ -35,5 +37,12 @@ func InvalidJSONSchema(reason string) *AppError {
 	return Domain(
 		"invalid_json_schema",
 		reason,
+	)
+}
+
+func ConstraintViolation(constraint, violation string) *AppError {
+	return Domain(
+		"constraint_violation",
+		fmt.Sprintf("constraint violated for %s: %s", violation),
 	)
 }
