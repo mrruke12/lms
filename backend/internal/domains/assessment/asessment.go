@@ -11,7 +11,7 @@ type Assessment struct {
 	id        uuid.UUID
 	attemptID uuid.UUID
 	status    Status
-	grade     int16
+	grade     int
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -42,7 +42,7 @@ func (a *Assessment) SetStatus(status Status) error {
 	return nil
 }
 
-func (a *Assessment) SetGrade(grade int16) error {
+func (a *Assessment) SetGrade(grade int) error {
 	if grade < 0 || grade > 100 {
 		return apperr.InvalidFieldFormat("Grade", "must be in range 0-100")
 	}
@@ -72,6 +72,6 @@ func (a *Assessment) Status() Status {
 	return a.status
 }
 
-func (a *Assessment) Grade() int16 {
+func (a *Assessment) Grade() int {
 	return a.grade
 }

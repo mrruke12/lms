@@ -11,15 +11,18 @@ type Submission struct {
 	id        uuid.UUID
 	attemptID uuid.UUID
 	elementID uuid.UUID
+	cap       int
+	grade     int
 	status    Status
 
 	CreatedAt time.Time
 }
 
-func NewSubmission(attemptID, elementID uuid.UUID) *Submission {
+func NewSubmission(attemptID, elementID uuid.UUID, cap int) *Submission {
 	return &Submission{
 		attemptID: attemptID,
 		elementID: elementID,
+		cap:       cap,
 		status:    StatusPending,
 	}
 }
@@ -42,6 +45,20 @@ func (s *Submission) SetStatus(status Status) error {
 	return nil
 }
 
+func (s *Submission) SetGrade(grade int) error {
+	if grade < 0 {
+		return apperr.ConstraintViolation("Grade", "cannot be negative")
+	}
+
+	if grade > s.cap {
+		return apperr.ConstraintViolation("Grade", "cannot be greater than cap")
+	}
+
+	s.grade = grade
+
+	return nil
+}
+
 /*
 Getters
 */
@@ -56,6 +73,14 @@ func (s *Submission) AttemptID() uuid.UUID {
 
 func (s *Submission) ElementID() uuid.UUID {
 	return s.elementID
+}
+
+func (s *Submission) Cap() int {
+	return s.cap
+}
+
+func (s *Submission) Grade() int {
+	return s.grade
 }
 
 func (s *Submission) Status() Status {
