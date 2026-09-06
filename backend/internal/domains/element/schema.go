@@ -1,15 +1,10 @@
 package element
 
-import (
-	"bytes"
-	"encoding/json"
-
-	"github.com/mrruke12/lms/internal/apperr"
-	"github.com/santhosh-tekuri/jsonschema/v6"
-)
+import "encoding/json"
 
 // Base schema for any type of element
-const elementSchemaString = `{
+const elementSchemaString = `
+{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
@@ -66,12 +61,19 @@ const elementSchemaString = `{
 }`
 
 // Additional schema to validate assessable elements
-const assessmentSchemaString = `{
+const assessmentSchemaString = `
+{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
     "assessment": {
       "type": "object",
+	  "properties": {
+	  	"cap": {
+			"type": "integer"
+		}
+	  },
+	  "required": ["cap"],
       "additionalProperties": true
     }
   },
@@ -79,50 +81,6 @@ const assessmentSchemaString = `{
   "additionalProperties": true
 }`
 
-var compiler = jsonschema.NewCompiler()
-
-// Compiles schema. Panics on error
-func compileSchema(schemaString string, name string) *jsonschema.Schema {
-	parsedSchema, err := jsonschema.UnmarshalJSON(
-		bytes.NewReader(
-			[]byte(schemaString),
-		),
-	)
-
-	if err != nil {
-		panic(err)
-	}
-
-	if err := compiler.AddResource(name+".json", parsedSchema); err != nil {
-		panic(err)
-	}
-
-	schema, err := compiler.Compile(name + ".json")
-
-	if err != nil {
-		panic(err)
-	}
-
-	return schema
+type SchemaValidator interface {
+	Validate(typ string, config json.RawMessage) error
 }
-
-// Validate raw json
-func validateJSON(schema *jsonschema.Schema, raw json.RawMessage) error {
-	inputData, err := jsonschema.UnmarshalJSON(bytes.NewReader(raw))
-
-	if err != nil {
-		return apperr.InvalidJSONSchema(err.Error())
-	}
-
-	if err := schema.Validate(inputData); err != nil {
-		return apperr.InvalidJSONSchema(err.Error())
-	}
-
-	return nil
-}
-
-// Reusable schema to validate Base Element
-var elementSchema = compileSchema(elementSchemaString, "base_element")
-
-// Reusable schema to validate Assessment Element
-var assessmentSchema = compileSchema(assessmentSchemaString, "assessment_element")

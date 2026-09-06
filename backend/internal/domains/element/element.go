@@ -5,13 +5,14 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/mrruke12/lms/internal/apperr"
 )
 
 type Element struct {
 	id         uuid.UUID
 	lessonID   uuid.UUID
 	parentID   *uuid.UUID
-	typ        string
+	typeID     uuid.UUID
 	assessment AssessmentType
 	config     json.RawMessage
 
@@ -19,39 +20,22 @@ type Element struct {
 	UpdatedAt time.Time
 }
 
-func NewElement(
-	lessonID uuid.UUID,
-	parentID *uuid.UUID,
-	typ string,
-	assessment AssessmentType,
-	config json.RawMessage,
-) *Element {
-	return &Element{
-		lessonID:   lessonID,
-		parentID:   parentID,
-		typ:        typ,
-		assessment: assessment,
-		config:     config,
-	}
-}
-
 /*
 Setters
 */
+func (e *Element) SetParentID(id *uuid.UUID) error {
+	if id != nil && e.id == *id {
+		return apperr.ConstraintViolation("ParentID", "cannot be parent of itself")
+	}
 
-func (e *Element) SetParentID(id *uuid.UUID) {
 	e.parentID = id
+
+	return nil
 }
 
 func (e *Element) SetConfig(config json.RawMessage) error {
-	if err := validateJSON(elementSchema, config); err != nil {
-		return err
-	}
-
-	if e.assessment != Assessment.None {
-		if err := validateJSON(assessmentSchema, config); err != nil {
-			return err
-		}
+	if !json.Valid(config) {
+		return apperr.InvalidJSONSchema("invalid json")
 	}
 
 	e.config = config
@@ -75,8 +59,8 @@ func (e *Element) ParentID() *uuid.UUID {
 	return e.parentID
 }
 
-func (e *Element) Type() string {
-	return e.typ
+func (e *Element) TypeID() uuid.UUID {
+	return e.typeID
 }
 
 func (e *Element) Assessment() AssessmentType {
@@ -102,7 +86,7 @@ func (e *Element) ToRevision() *Revision {
 		elementID:  e.id,
 		lessonID:   e.lessonID,
 		parentID:   e.parentID,
-		typ:        e.typ,
+		typeID:     e.typeID,
 		assessment: e.assessment,
 		config:     e.ConfigRaw(),
 	}

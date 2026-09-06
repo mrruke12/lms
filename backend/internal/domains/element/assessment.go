@@ -1,17 +1,21 @@
 package element
 
+import "github.com/mrruke12/lms/pkg/enum"
+
 type AssessmentType string
 
-type assessmentTypes struct {
-	None       AssessmentType
-	Manual     AssessmentType
-	Predefined AssessmentType
-	Tests      AssessmentType
-}
+var (
+	None       AssessmentType = "none"
+	Manual     AssessmentType = "manual"
+	Predefined AssessmentType = "predefined"
+	Tests      AssessmentType = "tests"
+)
 
-var Assessment = assessmentTypes{
-	None:       "none",
-	Manual:     "manual",
-	Predefined: "predefined",
-	Tests:      "tests",
-}
+var assessmentSet = enum.NewSet(
+	None,
+	Manual,
+	Predefined,
+	Tests,
+)
+
+var IsValidAssessmentType = assessmentSet.Has

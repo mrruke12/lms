@@ -11,15 +11,17 @@ type Assessment struct {
 	id        uuid.UUID
 	attemptID uuid.UUID
 	status    Status
+	cap       int
 	grade     int
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-func NewAssessment(attemptID uuid.UUID) *Assessment {
+func NewAssessment(attemptID uuid.UUID, cap int) *Assessment {
 	return &Assessment{
 		attemptID: attemptID,
+		cap:       cap,
 		grade:     0,
 	}
 }
@@ -70,6 +72,10 @@ func (a *Assessment) AttemptID() uuid.UUID {
 
 func (a *Assessment) Status() Status {
 	return a.status
+}
+
+func (a *Assessment) Cap() int {
+	return a.cap
 }
 
 func (a *Assessment) Grade() int {

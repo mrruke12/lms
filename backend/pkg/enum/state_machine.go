@@ -26,12 +26,12 @@ func NewStateMachine[T ~string](set *Set[T], transitions map[T][]T) *StateMachin
 func NewStateMachineSafe[T ~string](set *Set[T], transitions map[T][]T) (*StateMachine[T], error) {
 	for from, toList := range transitions {
 		if !set.Has(from) {
-			return nil, fmt.Errorf("could not initialize a state machine since the transition is not present in the set: %s", from)
+			return nil, fmt.Errorf("could not initialize a state machine for %s: %w", from, ErrInvalidKey)
 		}
 
 		for _, to := range toList {
 			if !set.Has(to) {
-				return nil, fmt.Errorf("could not initialize a state machine since the transition is not present in the set: %s", from)
+				return nil, fmt.Errorf("could not initialize a state machine for %s: %w", to, ErrInvalidKey)
 			}
 		}
 	}

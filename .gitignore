@@ -1,0 +1,6 @@
+.obsidian/
+
+.env.*
+.env
+
+go.sum

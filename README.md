@@ -1,7 +1,5 @@
 # Learning Management System (LMS)
 
----
-
 ## Core Scope
 *Functionality*
 - Create/manage lessons;

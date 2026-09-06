@@ -6,8 +6,11 @@ import (
 	"github.com/google/uuid"
 )
 
-type Repository interface {
+type ElementRepository interface {
 	GetByID(ctx context.Context, id uuid.UUID) (*Element, error)
 	GetAllByLessonID(ctx context.Context, id uuid.UUID) ([]Element, error)
-	GetTypes(ctx context.Context) ([]Type, error)
+}
+
+type TypeRepository interface {
+	GetByID(ctx context.Context, id int) (*Type, error)
 }

@@ -8,8 +8,8 @@ import (
 
 // Element type defined in DB
 type Type struct {
-	ID  int64
-	Key string
+	ID   int
+	Name string
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
