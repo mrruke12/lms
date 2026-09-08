@@ -2,10 +2,12 @@ package element
 
 import (
 	"encoding/json"
+	"slices"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/mrruke12/lms/internal/apperr"
+	"github.com/mrruke12/lms/internal/domains/assessment"
 )
 
 type Element struct {
@@ -13,7 +15,7 @@ type Element struct {
 	lessonID   uuid.UUID
 	parentID   *uuid.UUID
 	typeID     uuid.UUID
-	assessment AssessmentType
+	assessment assessment.Type
 	config     json.RawMessage
 
 	CreatedAt time.Time
@@ -63,31 +65,14 @@ func (e *Element) TypeID() uuid.UUID {
 	return e.typeID
 }
 
-func (e *Element) Assessment() AssessmentType {
+func (e *Element) Assessment() assessment.Type {
 	return e.assessment
 }
 
 func (e *Element) ConfigRaw() json.RawMessage {
-	config := make(json.RawMessage, len(e.config))
-	copy(config, e.config)
-	return config
+	return slices.Clone(e.config)
 }
 
 func (e *Element) ConfigUnmarshal(dst any) error {
 	return json.Unmarshal(e.config, dst)
-}
-
-/*
-Helpers
-*/
-
-func (e *Element) ToRevision() *Revision {
-	return &Revision{
-		elementID:  e.id,
-		lessonID:   e.lessonID,
-		parentID:   e.parentID,
-		typeID:     e.typeID,
-		assessment: e.assessment,
-		config:     e.ConfigRaw(),
-	}
 }

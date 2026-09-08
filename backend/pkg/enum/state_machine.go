@@ -61,8 +61,5 @@ func (m *StateMachine[T]) NextTransitions(from T) []T {
 
 	transitions := m.transitions[from]
 
-	result := make([]T, len(transitions))
-	copy(result, transitions)
-
-	return transitions
+	return slices.Clone(transitions)
 }
