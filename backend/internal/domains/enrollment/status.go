@@ -5,20 +5,20 @@ import "github.com/mrruke12/lms/pkg/enum"
 type Status string
 
 var (
-	EnrollmentActive  Status = "active"
-	EnrollmentArchive Status = "archive"
+	StatusActive   Status = "active"
+	StatusArchived Status = "archived"
 )
 
 var enrollmentStatusSet = enum.NewSet(
-	EnrollmentActive,
-	EnrollmentArchive,
+	StatusActive,
+	StatusArchived,
 )
 
 var enrollmentStatusTransitions = enum.NewStateMachine(
 	enrollmentStatusSet,
 	map[Status][]Status{
-		EnrollmentActive: {
-			EnrollmentArchive,
+		StatusActive: {
+			StatusArchived,
 		},
 	},
 )

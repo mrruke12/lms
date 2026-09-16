@@ -1,8 +1,6 @@
 package attempt
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/mrruke12/lms/internal/apperr"
 )
@@ -13,10 +11,6 @@ type Attempt struct {
 	lessonVersion uuid.UUID
 	studentID     uuid.UUID
 	status        Status
-
-	CreatedAt   time.Time
-	SubmittedAt *time.Time
-	CompletedAt *time.Time
 }
 
 func NewAttempt(lessonID, lessonVersion, studentID uuid.UUID) *Attempt {

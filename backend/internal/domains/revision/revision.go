@@ -15,7 +15,7 @@ type Revision struct {
 	id         uuid.UUID
 	lessonID   uuid.UUID
 	parentID   *uuid.UUID
-	typeID     uuid.UUID
+	typeID     int
 	assessment assessment.Type
 	config     json.RawMessage
 
@@ -42,7 +42,7 @@ func (r *Revision) ParentID() *uuid.UUID {
 	return r.parentID
 }
 
-func (r *Revision) TypeID() uuid.UUID {
+func (r *Revision) TypeID() int {
 	return r.typeID
 }
 

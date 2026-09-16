@@ -3,7 +3,6 @@ package element
 import (
 	"encoding/json"
 	"slices"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/mrruke12/lms/internal/apperr"
@@ -14,12 +13,9 @@ type Element struct {
 	id         uuid.UUID
 	lessonID   uuid.UUID
 	parentID   *uuid.UUID
-	typeID     uuid.UUID
+	typeID     int
 	assessment assessment.Type
 	config     json.RawMessage
-
-	CreatedAt time.Time
-	UpdatedAt time.Time
 }
 
 /*
@@ -61,7 +57,7 @@ func (e *Element) ParentID() *uuid.UUID {
 	return e.parentID
 }
 
-func (e *Element) TypeID() uuid.UUID {
+func (e *Element) TypeID() int {
 	return e.typeID
 }
 

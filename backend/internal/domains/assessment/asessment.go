@@ -1,8 +1,6 @@
 package assessment
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/mrruke12/lms/internal/apperr"
 )
@@ -13,9 +11,6 @@ type Assessment struct {
 	status    Status
 	cap       int
 	grade     int
-
-	CreatedAt time.Time
-	UpdatedAt time.Time
 }
 
 func NewAssessment(attemptID uuid.UUID, cap int) *Assessment {

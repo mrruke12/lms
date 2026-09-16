@@ -6,9 +6,17 @@ import (
 )
 
 type Enrollment struct {
-	id     uuid.UUID
-	typ    Type
-	status Status
+	id       uuid.UUID
+	userID   uuid.UUID
+	objectID uuid.UUID
+	typ      Type
+	status   Status
+}
+
+func NewEnrollment(userID, objectID uuid.UUID, typ Type) (*Enrollment, error) {
+	if !enrollmentTypeSet.Has(typ) {
+		return nil, apperr.ConstraintViolation("ObjectID", "")
+	}
 }
 
 /*
