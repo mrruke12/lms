@@ -8,4 +8,5 @@ import (
 
 type Repository interface {
 	GetByID(ctx context.Context, id uuid.UUID) (*Lesson, error)
+	Create(ctx context.Context, lesson *Lesson) (*uuid.UUID, error)
 }

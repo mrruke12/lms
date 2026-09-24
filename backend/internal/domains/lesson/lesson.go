@@ -23,11 +23,15 @@ type Lesson struct {
 	DeletedBy *uuid.UUID
 }
 
-func NewLesson(authorID uuid.UUID, name string) *Lesson {
+func NewLesson(authorID uuid.UUID, name string) (*Lesson, error) {
+	if err := isValidName(name); err != nil {
+		return nil, err
+	}
+
 	return &Lesson{
 		name:   name,
 		status: StatusDraft,
-	}
+	}, nil
 }
 
 /*
@@ -47,6 +51,24 @@ func (l *Lesson) CanEdit() bool {
 	return true
 }
 
+func isValidName(name string) error {
+	if !isTrimmedRegexp.MatchString(name) {
+		return apperr.InvalidFieldFormat("Name", "must start and end with non-whitespace character")
+	}
+
+	length := len(name)
+
+	if length < nameMinLen {
+		return apperr.InvalidFieldFormat("Name", "too short")
+	}
+
+	if length > nameMaxLen {
+		return apperr.InvalidFieldFormat("Name", "too long")
+	}
+
+	return nil
+}
+
 /*
 Setters
 */
@@ -64,19 +86,11 @@ func (l *Lesson) SetStatus(status Status) error {
 }
 
 func (l *Lesson) SetName(name string) error {
-	if !isTrimmedRegexp.MatchString(name) {
-		return apperr.InvalidFieldFormat("Name", "must start and end with non-whitespace character")
+	if err := isValidName(name); err != nil {
+		return err
 	}
 
-	length := len(name)
-
-	if length < nameMinLen {
-		return apperr.InvalidFieldFormat("Name", "too short")
-	}
-
-	if length > nameMaxLen {
-		return apperr.InvalidFieldFormat("Name", "too long")
-	}
+	l.name = name
 
 	return nil
 }
