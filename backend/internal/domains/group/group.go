@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mrruke12/lms/internal/apperr"
+	"github.com/mrruke12/lms/internal/domains/domainerr"
 )
 
 type Group struct {
@@ -17,15 +17,15 @@ type Group struct {
 
 func NewGroup(name string, degree Degree, entryYear, graduationYear int) (*Group, error) {
 	if valid, reason := isValidName(name); !valid {
-		return nil, apperr.ConstraintViolation("Name", reason)
+		return nil, domainerr.NewConstraintViolation("Name", reason)
 	}
 
 	if entryYear > time.Now().Year() {
-		return nil, apperr.ConstraintViolation("EntryYear", "cannot be a future year")
+		return nil, domainerr.NewConstraintViolation("EntryYear", "cannot be a future year")
 	}
 
 	if entryYear < graduationYear {
-		return nil, apperr.ConstraintViolation("EntryYear", "cannot be before graduation year")
+		return nil, domainerr.NewConstraintViolation("EntryYear", "cannot be before graduation year")
 	}
 
 	return &Group{
@@ -60,7 +60,7 @@ Setters
 
 func (g *Group) SetName(name string) error {
 	if valid, reason := isValidName(name); !valid {
-		return apperr.ConstraintViolation("Name", reason)
+		return domainerr.NewConstraintViolation("Name", reason)
 	}
 
 	g.name = name

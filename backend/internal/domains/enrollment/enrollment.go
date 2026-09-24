@@ -2,7 +2,7 @@ package enrollment
 
 import (
 	"github.com/google/uuid"
-	"github.com/mrruke12/lms/internal/apperr"
+	"github.com/mrruke12/lms/internal/domains/domainerr"
 )
 
 type Enrollment struct {
@@ -15,7 +15,7 @@ type Enrollment struct {
 
 func NewEnrollment(userID, objectID uuid.UUID, typ Type) (*Enrollment, error) {
 	if !enrollmentTypeSet.Has(typ) {
-		return nil, apperr.ConstraintViolation("ObjectID", "")
+		return nil, domainerr.NewConstraintViolation("ObjectID", "")
 	}
 
 	return &Enrollment{
@@ -31,7 +31,7 @@ Setters
 
 func (e *Enrollment) SetStatus(status Status) error {
 	if !enrollmentStatusTransitions.CanTransition(e.status, e.status) {
-		return apperr.InvalidStatusTransition(string(e.status), string(status))
+		return domainerr.NewInvalidStatusTransition(string(e.status), string(status))
 	}
 
 	e.status = status

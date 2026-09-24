@@ -2,11 +2,12 @@ package element
 
 import (
 	"encoding/json"
+	"errors"
 	"slices"
 
 	"github.com/google/uuid"
-	"github.com/mrruke12/lms/internal/apperr"
 	"github.com/mrruke12/lms/internal/domains/assessment"
+	"github.com/mrruke12/lms/internal/domains/domainerr"
 )
 
 type Element struct {
@@ -23,7 +24,7 @@ Setters
 */
 func (e *Element) SetParentID(id *uuid.UUID) error {
 	if id != nil && e.id == *id {
-		return apperr.ConstraintViolation("ParentID", "cannot be parent of itself")
+		return domainerr.NewConstraintViolation("ParentID", "cannot be parent of itself")
 	}
 
 	e.parentID = id
@@ -33,7 +34,7 @@ func (e *Element) SetParentID(id *uuid.UUID) error {
 
 func (e *Element) SetConfig(config json.RawMessage) error {
 	if !json.Valid(config) {
-		return apperr.InvalidJSONSchema("invalid json")
+		return errors.New("invalid json")
 	}
 
 	e.config = config

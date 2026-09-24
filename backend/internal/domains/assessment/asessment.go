@@ -2,7 +2,7 @@ package assessment
 
 import (
 	"github.com/google/uuid"
-	"github.com/mrruke12/lms/internal/apperr"
+	"github.com/mrruke12/lms/internal/domains/domainerr"
 )
 
 type Assessment struct {
@@ -27,11 +27,11 @@ Setters
 
 func (a *Assessment) SetStatus(status Status) error {
 	if !statusSet.Has(status) {
-		return apperr.InvalidStatus(string(status))
+		return domainerr.NewInvalidStatus(status)
 	}
 
 	if !statusTransitions.CanTransition(a.status, status) {
-		return apperr.InvalidStatusTransition(string(a.status), string(status))
+		return domainerr.NewInvalidStatusTransition(a.status, status)
 	}
 
 	a.status = status
@@ -41,11 +41,11 @@ func (a *Assessment) SetStatus(status Status) error {
 
 func (a *Assessment) SetGrade(grade int) error {
 	if grade < 0 || grade > 100 {
-		return apperr.InvalidFieldFormat("Grade", "must be in range 0-100")
+		return domainerr.NewInvalidFieldFormat("Grade", "must be in range 0-100")
 	}
 
 	if a.status == StatusEvaluated {
-		return apperr.ConstraintViolation("Status", "cannot change the grade of evaluated assessment")
+		return domainerr.NewConstraintViolation("Status", "cannot change the grade of evaluated assessment")
 	}
 
 	a.grade = grade

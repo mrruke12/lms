@@ -2,7 +2,7 @@ package attempt
 
 import (
 	"github.com/google/uuid"
-	"github.com/mrruke12/lms/internal/apperr"
+	"github.com/mrruke12/lms/internal/domains/domainerr"
 )
 
 type Attempt struct {
@@ -28,11 +28,11 @@ Setters
 
 func (a *Attempt) SetStatus(status Status) error {
 	if !IsValidStatus(status) {
-		return apperr.InvalidStatus(string(status))
+		return domainerr.NewInvalidStatus(string(status))
 	}
 
 	if !statusTransitions.CanTransition(a.status, status) {
-		return apperr.InvalidStatusTransition(string(a.status), string(status))
+		return domainerr.NewInvalidStatusTransition(string(a.status), string(status))
 	}
 
 	a.status = status

@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mrruke12/lms/internal/apperr"
+	"github.com/mrruke12/lms/internal/domains/domainerr"
 )
 
 type Submission struct {
@@ -33,11 +33,11 @@ Setters
 
 func (s *Submission) SetStatus(status Status) error {
 	if !IsValidStatus(status) {
-		return apperr.InvalidStatus(string(status))
+		return domainerr.NewInvalidStatus(string(status))
 	}
 
 	if !statusTransitions.CanTransition(s.status, status) {
-		return apperr.InvalidStatusTransition(string(s.status), string(status))
+		return domainerr.NewInvalidStatusTransition(string(s.status), string(status))
 	}
 
 	s.status = status
@@ -47,11 +47,11 @@ func (s *Submission) SetStatus(status Status) error {
 
 func (s *Submission) SetScore(score int) error {
 	if score < 0 {
-		return apperr.ConstraintViolation("Grade", "cannot be negative")
+		return domainerr.NewConstraintViolation("Grade", "cannot be negative")
 	}
 
 	if score > s.cap {
-		return apperr.ConstraintViolation("Grade", "cannot be greater than cap")
+		return domainerr.NewConstraintViolation("Grade", "cannot be greater than cap")
 	}
 
 	s.score = score

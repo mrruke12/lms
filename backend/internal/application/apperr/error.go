@@ -2,14 +2,7 @@ package apperr
 
 type Type string
 
-const (
-	ApplicationError    Type = "application"
-	DomainError         Type = "domain"
-	InfrastructureError Type = "infrastructure"
-)
-
 type AppError struct {
-	Type    Type
 	Code    string
 	Message string
 	Err     error
@@ -25,4 +18,19 @@ func (e *AppError) Error() string {
 
 func (e *AppError) Unwrap() error {
 	return e.Err
+}
+
+func Wrap(code, message string, err error) *AppError {
+	return &AppError{
+		Code:    code,
+		Message: message,
+		Err:     err,
+	}
+}
+
+func Error(code, message string) error {
+	return &AppError{
+		Code:    code,
+		Message: message,
+	}
 }

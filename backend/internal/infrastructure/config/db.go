@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/mrruke12/lms/internal/apperr"
 	"github.com/mrruke12/lms/pkg/env"
 )
 
@@ -29,15 +28,13 @@ func GetDBConfig() (*DBConfig, error) {
 	})
 
 	if err != nil {
-		return nil, apperr.EnvironmentVariableError(err.Error())
+		return nil, err
 	}
 
 	port, err := strconv.Atoi(values[1])
 
 	if err != nil {
-		return nil, apperr.EnvironmentVariableError(
-			fmt.Sprintf("could not convert \"%s\" to int", values[1]),
-		)
+		return nil, fmt.Errorf("could not convert \"%s\" to int", values[1])
 	}
 
 	return &DBConfig{

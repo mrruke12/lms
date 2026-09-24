@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mrruke12/lms/internal/apperr"
+	"github.com/mrruke12/lms/internal/domains/domainerr"
 )
 
 type Lesson struct {
@@ -53,17 +53,17 @@ func (l *Lesson) CanEdit() bool {
 
 func isValidName(name string) error {
 	if !isTrimmedRegexp.MatchString(name) {
-		return apperr.InvalidFieldFormat("Name", "must start and end with non-whitespace character")
+		return domainerr.NewInvalidFieldFormat("Name", "must start and end with non-whitespace character")
 	}
 
 	length := len(name)
 
 	if length < nameMinLen {
-		return apperr.InvalidFieldFormat("Name", "too short")
+		return domainerr.NewInvalidFieldFormat("Name", "too short")
 	}
 
 	if length > nameMaxLen {
-		return apperr.InvalidFieldFormat("Name", "too long")
+		return domainerr.NewInvalidFieldFormat("Name", "too long")
 	}
 
 	return nil
@@ -75,11 +75,11 @@ Setters
 
 func (l *Lesson) SetStatus(status Status) error {
 	if !IsValidStatus(status) {
-		return apperr.InvalidStatus(string(status))
+		return domainerr.NewInvalidStatus(string(status))
 	}
 
 	if !statusTransitions.CanTransition(l.status, status) {
-		return apperr.InvalidStatusTransition(string(l.status), string(status))
+		return domainerr.NewInvalidStatusTransition(string(l.status), string(status))
 	}
 
 	return nil
