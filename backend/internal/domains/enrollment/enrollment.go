@@ -17,6 +17,12 @@ func NewEnrollment(userID, objectID uuid.UUID, typ Type) (*Enrollment, error) {
 	if !enrollmentTypeSet.Has(typ) {
 		return nil, apperr.ConstraintViolation("ObjectID", "")
 	}
+
+	return &Enrollment{
+		userID:   userID,
+		objectID: objectID,
+		typ:      typ,
+	}, nil
 }
 
 /*
