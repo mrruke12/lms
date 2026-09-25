@@ -1,4 +1,4 @@
-package element
+package revision
 
 import (
 	"github.com/google/uuid"

@@ -8,5 +8,5 @@ import (
 
 type Repository interface {
 	GetByID(ctx context.Context, id uuid.UUID) (*Element, error)
-	GetAllByLessonID(ctx context.Context, id uuid.UUID) ([]Element, error)
+	GetByLessonID(ctx context.Context, id uuid.UUID) ([]Element, error)
 }
