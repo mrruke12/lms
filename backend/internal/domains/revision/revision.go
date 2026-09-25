@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mrruke12/lms/internal/domains/assessment"
 	"github.com/mrruke12/lms/internal/domains/element"
 )
 
@@ -15,8 +14,8 @@ type Revision struct {
 	id         uuid.UUID
 	lessonID   uuid.UUID
 	parentID   *uuid.UUID
-	typeID     int
-	assessment assessment.Type
+	typ        string
+	assessment string
 	config     json.RawMessage
 
 	CreatedAt time.Time
@@ -42,11 +41,11 @@ func (r *Revision) ParentID() *uuid.UUID {
 	return r.parentID
 }
 
-func (r *Revision) TypeID() int {
-	return r.typeID
+func (r *Revision) Type() string {
+	return r.typ
 }
 
-func (r *Revision) Assessment() assessment.Type {
+func (r *Revision) Assessment() string {
 	return r.assessment
 }
 
@@ -62,7 +61,7 @@ func (r *Revision) ConfigUnmarshal(dst any) error {
 Helpers
 */
 
-// Reports whether the element differs from its latest revision
+// Reports whether the element differs from revision
 func (r *Revision) Differs(el *element.Element) bool {
 	return el.ParentID() != r.ParentID() ||
 		!slices.Equal(r.config, el.ConfigRaw())

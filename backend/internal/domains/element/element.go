@@ -14,7 +14,7 @@ type Element struct {
 	id         uuid.UUID
 	lessonID   uuid.UUID
 	parentID   *uuid.UUID
-	typeID     int
+	typ        Type
 	assessment assessment.Type
 	config     json.RawMessage
 }
@@ -58,8 +58,8 @@ func (e *Element) ParentID() *uuid.UUID {
 	return e.parentID
 }
 
-func (e *Element) TypeID() int {
-	return e.typeID
+func (e *Element) Type() Type {
+	return e.typ
 }
 
 func (e *Element) Assessment() assessment.Type {

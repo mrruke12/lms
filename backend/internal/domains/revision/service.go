@@ -11,8 +11,8 @@ func CreateFromElement(el *element.Element) *Revision {
 		elementID:  el.ID(),
 		lessonID:   el.LessonID(),
 		parentID:   el.ParentID(),
-		typeID:     el.TypeID(),
-		assessment: el.Assessment(),
+		typ:        string(el.Type()),
+		assessment: string(el.Assessment()),
 		config:     el.ConfigRaw(),
 	}
 }
