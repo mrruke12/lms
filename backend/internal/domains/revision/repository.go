@@ -8,4 +8,5 @@ import (
 
 type Repository interface {
 	GetByLessonID(ctx context.Context, id uuid.UUID) ([]Revision, error)
+	BulkCreate(ctx context.Context, revs []Revision) error
 }

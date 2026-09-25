@@ -11,6 +11,12 @@ var (
 	ErrField                   error = errors.New("constraint violation")
 	ErrInvalidStatus           error = errors.New("invalid status")
 	ErrInvalidStatusTransition error = errors.New("invalid status transition")
+
+	ErrNotFound  error = errors.New("resource not found")
+	ErrConflict  error = errors.New("conflict")
+	ErrForbidden error = errors.New("forbidden")
+	ErrUnaviable error = errors.New("storage unaviable")
+	ErrTimeout   error = errors.New("storage timeout")
 )
 
 func NewInvalidFieldValue(field, reason string) error {

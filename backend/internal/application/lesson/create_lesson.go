@@ -10,25 +10,25 @@ import (
 )
 
 type CreateLessonCommand struct {
-	actor auth.Actor
-	name  string
+	Actor auth.Actor
+	Name  string
 }
 
 func (s *Service) CreateLesson(ctx context.Context, cmd CreateLessonCommand) (*uuid.UUID, error) {
-	if !cmd.actor.HasRole(auth.RoleTeacher) || !cmd.actor.HasPermission(auth.PermissionLessonCreate) {
-		return nil, apperr.Error("access_denied", "access denied")
+	if !cmd.Actor.HasRole(auth.RoleTeacher) || !cmd.Actor.HasPermission(auth.PermissionLessonCreate) {
+		return nil, apperr.Error(apperr.CodePermissionDenied, "cannot create lessons")
 	}
 
-	lesson, err := lesson.NewLesson(
-		cmd.actor.UserID(),
-		cmd.name,
+	l, err := lesson.NewLesson(
+		cmd.Actor.UserID(),
+		cmd.Name,
 	)
 
 	if err != nil {
 		return nil, apperr.Wrap("invalid_lesson", "failed to create lesson", err)
 	}
 
-	id, err := s.lessons.Create(ctx, lesson)
+	id, err := s.lessons.Create(ctx, l)
 
 	if err != nil {
 		return nil, apperr.Wrap("save_failed", "failed to save new lesson", err)
