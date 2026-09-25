@@ -24,7 +24,7 @@ Setters
 */
 func (e *Element) SetParentID(id *uuid.UUID) error {
 	if id != nil && e.id == *id {
-		return domainerr.NewConstraintViolation("ParentID", "cannot be parent of itself")
+		return domainerr.NewInvalidFieldValue("ParentID", "cannot be parent of itself")
 	}
 
 	e.parentID = id

@@ -15,7 +15,7 @@ type Enrollment struct {
 
 func NewEnrollment(userID, objectID uuid.UUID, typ Type) (*Enrollment, error) {
 	if !enrollmentTypeSet.Has(typ) {
-		return nil, domainerr.NewConstraintViolation("ObjectID", "")
+		return nil, domainerr.NewInvalidFieldValue("ObjectID", "")
 	}
 
 	return &Enrollment{

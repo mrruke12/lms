@@ -41,11 +41,11 @@ func (a *Assessment) SetStatus(status Status) error {
 
 func (a *Assessment) SetGrade(grade int) error {
 	if grade < 0 || grade > 100 {
-		return domainerr.NewInvalidFieldFormat("Grade", "must be in range 0-100")
+		return domainerr.NewInvalidFieldValue("Grade", "must be in range 0-100")
 	}
 
 	if a.status == StatusEvaluated {
-		return domainerr.NewConstraintViolation("Status", "cannot change the grade of evaluated assessment")
+		return domainerr.NewInvalidFieldValue("Status", "cannot change the grade of evaluated assessment")
 	}
 
 	a.grade = grade

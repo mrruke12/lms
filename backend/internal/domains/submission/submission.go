@@ -47,11 +47,11 @@ func (s *Submission) SetStatus(status Status) error {
 
 func (s *Submission) SetScore(score int) error {
 	if score < 0 {
-		return domainerr.NewConstraintViolation("Grade", "cannot be negative")
+		return domainerr.NewInvalidFieldValue("Grade", "cannot be negative")
 	}
 
 	if score > s.cap {
-		return domainerr.NewConstraintViolation("Grade", "cannot be greater than cap")
+		return domainerr.NewInvalidFieldValue("Grade", "cannot be greater than cap")
 	}
 
 	s.score = score

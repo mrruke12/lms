@@ -53,17 +53,17 @@ func (l *Lesson) CanEdit() bool {
 
 func isValidName(name string) error {
 	if !isTrimmedRegexp.MatchString(name) {
-		return domainerr.NewInvalidFieldFormat("Name", "must start and end with non-whitespace character")
+		return domainerr.NewInvalidFieldValue("Name", "must start and end with non-whitespace character")
 	}
 
 	length := len(name)
 
 	if length < nameMinLen {
-		return domainerr.NewInvalidFieldFormat("Name", "too short")
+		return domainerr.NewInvalidFieldValue("Name", "too short")
 	}
 
 	if length > nameMaxLen {
-		return domainerr.NewInvalidFieldFormat("Name", "too long")
+		return domainerr.NewInvalidFieldValue("Name", "too long")
 	}
 
 	return nil

@@ -7,18 +7,14 @@ import (
 )
 
 var (
-	ErrInvalidFieldFormat      error = errors.New("invalid field format")
-	ErrConstraintViolation     error = errors.New("constraint violation")
+	ErrInvalidFieldValue       error = errors.New("invalid field format")
+	ErrField                   error = errors.New("constraint violation")
 	ErrInvalidStatus           error = errors.New("invalid status")
 	ErrInvalidStatusTransition error = errors.New("invalid status transition")
 )
 
-func NewInvalidFieldFormat(field, reason string) error {
-	return erraggregation.Join(ErrInvalidFieldFormat, field, reason)
-}
-
-func NewConstraintViolation(constraint, reason string) error {
-	return erraggregation.Join(ErrConstraintViolation, constraint, reason)
+func NewInvalidFieldValue(field, reason string) error {
+	return erraggregation.Join(ErrInvalidFieldValue, field, reason)
 }
 
 func NewInvalidStatus[T ~string](status T) error {

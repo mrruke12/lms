@@ -17,15 +17,15 @@ type Group struct {
 
 func NewGroup(name string, degree Degree, entryYear, graduationYear int) (*Group, error) {
 	if valid, reason := isValidName(name); !valid {
-		return nil, domainerr.NewConstraintViolation("Name", reason)
+		return nil, domainerr.NewInvalidFieldValue("Name", reason)
 	}
 
 	if entryYear > time.Now().Year() {
-		return nil, domainerr.NewConstraintViolation("EntryYear", "cannot be a future year")
+		return nil, domainerr.NewInvalidFieldValue("EntryYear", "cannot be a future year")
 	}
 
 	if entryYear < graduationYear {
-		return nil, domainerr.NewConstraintViolation("EntryYear", "cannot be before graduation year")
+		return nil, domainerr.NewInvalidFieldValue("EntryYear", "cannot be before graduation year")
 	}
 
 	return &Group{
@@ -60,7 +60,7 @@ Setters
 
 func (g *Group) SetName(name string) error {
 	if valid, reason := isValidName(name); !valid {
-		return domainerr.NewConstraintViolation("Name", reason)
+		return domainerr.NewInvalidFieldValue("Name", reason)
 	}
 
 	g.name = name
