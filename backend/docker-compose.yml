@@ -1,0 +1,15 @@
+services:
+  uni_pg:
+    image: postgres:18-alpine
+    container_name: lms_main
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: main
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - lms_main_data:/var/lib/postgresql/
+volumes:
+  lms_main_data:
