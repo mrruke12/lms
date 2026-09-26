@@ -16,7 +16,7 @@ type CreateLessonCommand struct {
 
 func (s *Service) CreateLesson(ctx context.Context, cmd CreateLessonCommand) (*uuid.UUID, error) {
 	if !cmd.Actor.HasRole(auth.RoleTeacher) || !cmd.Actor.HasPermission(auth.PermissionLessonCreate) {
-		return nil, apperr.Error(apperr.CodePermissionDenied, "cannot create lessons")
+		return nil, apperr.Error(apperr.CodePermissionDenied, "has no permission to create lessons")
 	}
 
 	l, err := lesson.NewLesson(

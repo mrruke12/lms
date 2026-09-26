@@ -18,7 +18,7 @@ type UpdateLessonCommand struct {
 
 func (s *Service) UpdateLesson(ctx context.Context, cmd UpdateLessonCommand) error {
 	if !cmd.Actor.HasRole(auth.RoleTeacher) || !cmd.Actor.HasPermission(auth.PermissionLessonUpdate) {
-		return apperr.Error(apperr.CodePermissionDenied, "cannot edit lessons")
+		return apperr.Error(apperr.CodePermissionDenied, "has no permission to edit lessons")
 	}
 
 	l, err := s.lessons.GetByID(ctx, cmd.LessonID)
