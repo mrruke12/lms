@@ -16,6 +16,7 @@ type UpdateLessonCommand struct {
 	Elements []element.Element
 }
 
+// TODO: missing create new elements step; must be 1. create new elements 2. acquire elements all over again 3. compute and save revisions
 func (s *Service) UpdateLesson(ctx context.Context, cmd UpdateLessonCommand) error {
 	if !cmd.Actor.HasRole(auth.RoleTeacher) || !cmd.Actor.HasPermission(auth.PermissionLessonUpdate) {
 		return apperr.Error(apperr.CodePermissionDenied, "has no permission to edit lessons")

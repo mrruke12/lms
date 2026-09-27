@@ -33,7 +33,14 @@ func NewLesson(authorID uuid.UUID, name string) (*Lesson, error) {
 		return nil, err
 	}
 
+	id, err := uuid.NewV7()
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &Lesson{
+		id:       id,
 		name:     name,
 		authorID: authorID,
 		status:   StatusDraft,

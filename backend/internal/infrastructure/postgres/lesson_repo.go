@@ -13,7 +13,6 @@ import (
 
 type LessonRepository struct {
 	pool *pgxpool.Pool
-	ref  lesson.Repository
 }
 
 func NewLessonRepository(pool *pgxpool.Pool) *LessonRepository {
@@ -43,26 +42,19 @@ func (r *LessonRepository) GetByID(ctx context.Context, id uuid.UUID) (*lesson.L
 	return l, nil
 }
 
-func (r *LessonRepository) Create(ctx context.Context, l *lesson.Lesson) (*uuid.UUID, error) {
+func (r *LessonRepository) Create(ctx context.Context, l *lesson.Lesson) error {
 	sql := `
-		insert into lessons (author_id, version, name, status)
-		values ($1, $2, $3, $4)
-		returning id
+		insert into lessons (id, author_id, version, name, status)
+		values ($1, $2, $3, $4, $5)
 	`
 
-	row := r.pool.QueryRow(
+	_, err := r.pool.Exec(
 		ctx,
 		sql,
-		l.AuthorID(), l.Version(), l.Name(), l.Status(),
+		l.ID(), l.AuthorID(), l.Version(), l.Name(), l.Status(),
 	)
 
-	var id uuid.UUID
-
-	if err := row.Scan(&id); err != nil {
-		return nil, err
-	}
-
-	return &id, nil
+	return err
 }
 
 func (r *LessonRepository) Update(ctx context.Context, l *lesson.Lesson) error {
