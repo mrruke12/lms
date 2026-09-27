@@ -36,7 +36,7 @@ func (r *LessonRepository) GetByID(ctx context.Context, id uuid.UUID) (*lesson.L
 			return nil, domainerr.ErrNotFound
 		}
 
-		return nil, err
+		return nil, wrapDriverErr(err)
 	}
 
 	return l, nil
@@ -54,7 +54,7 @@ func (r *LessonRepository) Create(ctx context.Context, l *lesson.Lesson) error {
 		l.ID(), l.AuthorID(), l.Version(), l.Name(), l.Status(),
 	)
 
-	return err
+	return wrapDriverErr(err)
 }
 
 func (r *LessonRepository) Update(ctx context.Context, l *lesson.Lesson) error {
@@ -73,7 +73,7 @@ func (r *LessonRepository) Update(ctx context.Context, l *lesson.Lesson) error {
 	)
 
 	if err != nil {
-		return err
+		return wrapDriverErr(err)
 	}
 
 	if tag.RowsAffected() == 0 {

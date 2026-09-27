@@ -32,7 +32,7 @@ func (r *ElementRepository) GetByID(ctx context.Context, id uuid.UUID) (*element
 			return nil, domainerr.ErrNotFound
 		}
 
-		return nil, err
+		return nil, wrapDriverErr(err)
 	}
 
 	return el, nil
@@ -45,13 +45,13 @@ func (r *ElementRepository) GetByLessonID(ctx context.Context, id uuid.UUID) ([]
 		ToSql()
 
 	if err != nil {
-		return nil, err
+		return nil, wrapDriverErr(err)
 	}
 
 	rows, err := r.pool.Query(ctx, sql, args...)
 
 	if err != nil {
-		return nil, err
+		return nil, wrapDriverErr(err)
 	}
 
 	defer rows.Close()
@@ -62,14 +62,14 @@ func (r *ElementRepository) GetByLessonID(ctx context.Context, id uuid.UUID) ([]
 		el, err := element.FromRow(rows)
 
 		if err != nil {
-			return nil, err
+			return nil, wrapDriverErr(err)
 		}
 
 		els = append(els, *el)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, wrapDriverErr(err)
 	}
 
 	return els, nil
@@ -85,12 +85,12 @@ func (r *ElementRepository) BulkCreate(ctx context.Context, els []element.Elemen
 	sql, args, err := query.ToSql()
 
 	if err != nil {
-		return err
+		return wrapDriverErr(err)
 	}
 
 	_, err = r.pool.Exec(ctx, sql, args...)
 
-	return err
+	return wrapDriverErr(err)
 }
 
 func (r *ElementRepository) BulkUpdate(ctx context.Context, els []element.Element) error {
@@ -125,7 +125,7 @@ func (r *ElementRepository) BulkUpdate(ctx context.Context, els []element.Elemen
 		ids, parentIDs, configs,
 	)
 
-	return err
+	return wrapDriverErr(err)
 }
 
 func (r *ElementRepository) BulkDelete(ctx context.Context, ids []uuid.UUID) error {
@@ -140,5 +140,5 @@ func (r *ElementRepository) BulkDelete(ctx context.Context, ids []uuid.UUID) err
 		ids,
 	)
 
-	return err
+	return wrapDriverErr(err)
 }

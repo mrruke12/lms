@@ -14,7 +14,7 @@ func MapDBErr(err error) error {
 		return Error("storage_conflict", err.Error())
 	case errors.Is(err, domainerr.ErrForbidden):
 		return Error("storage_forbidden", err.Error())
-	case errors.Is(err, domainerr.ErrUnaviable):
+	case errors.Is(err, domainerr.ErrUnavailable):
 		return Error("storage_unaviable", err.Error())
 	case errors.Is(err, domainerr.ErrTimeout):
 		return Error("storage_timeout", err.Error())

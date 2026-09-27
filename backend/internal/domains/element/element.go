@@ -9,7 +9,7 @@ import (
 	"github.com/mrruke12/lms/internal/domains/assessment"
 	"github.com/mrruke12/lms/internal/domains/domainerr"
 	"github.com/mrruke12/lms/pkg/enum"
-	erraggregation "github.com/mrruke12/lms/pkg/erragregation"
+	erraggregation "github.com/mrruke12/lms/pkg/erraggregation"
 	"github.com/mrruke12/lms/pkg/storage"
 )
 

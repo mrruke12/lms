@@ -3,7 +3,7 @@ package domainerr
 import (
 	"errors"
 
-	erraggregation "github.com/mrruke12/lms/pkg/erragregation"
+	erraggregation "github.com/mrruke12/lms/pkg/erraggregation"
 )
 
 var (
@@ -12,11 +12,11 @@ var (
 	ErrInvalidStatus           error = errors.New("invalid status")
 	ErrInvalidStatusTransition error = errors.New("invalid status transition")
 
-	ErrNotFound  error = errors.New("resource not found")
-	ErrConflict  error = errors.New("conflict")
-	ErrForbidden error = errors.New("forbidden")
-	ErrUnaviable error = errors.New("storage unaviable")
-	ErrTimeout   error = errors.New("storage timeout")
+	ErrNotFound    error = errors.New("resource not found")
+	ErrConflict    error = errors.New("conflict")
+	ErrForbidden   error = errors.New("forbidden")
+	ErrUnavailable error = errors.New("storage unaviable")
+	ErrTimeout     error = errors.New("storage timeout")
 )
 
 func NewInvalidFieldValue(field, reason string) error {

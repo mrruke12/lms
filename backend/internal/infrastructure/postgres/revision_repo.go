@@ -24,7 +24,7 @@ func (r *RevisionRepository) GetByLessonID(ctx context.Context, id uuid.UUID) ([
 	rows, err := r.pool.Query(ctx, sql, id)
 
 	if err != nil {
-		return nil, err
+		return nil, wrapDriverErr(err)
 	}
 
 	defer rows.Close()
@@ -35,14 +35,14 @@ func (r *RevisionRepository) GetByLessonID(ctx context.Context, id uuid.UUID) ([
 		rev, err := revision.FromRow(rows)
 
 		if err != nil {
-			return nil, err
+			return nil, wrapDriverErr(err)
 		}
 
 		revs = append(revs, *rev)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, wrapDriverErr(err)
 	}
 
 	return revs, nil
@@ -58,10 +58,10 @@ func (r *RevisionRepository) BulkCreate(ctx context.Context, revs []revision.Rev
 	sql, args, err := query.ToSql()
 
 	if err != nil {
-		return err
+		return wrapDriverErr(err)
 	}
 
 	_, err = r.pool.Exec(ctx, sql, args...)
 
-	return err
+	return wrapDriverErr(err)
 }
