@@ -29,16 +29,11 @@ create table lessons (
     constraint uq_lesson_version unique (id, version)
 );
 
-create table element_types (
-    id serial primary key,
-    name varchar(256) not null unique
-);
-
 create table elements (
     id UUID primary key default uuidv7(),
     lesson_id UUID not null references lessons(id) on delete cascade, 
     parent_id UUID references elements(id) on delete cascade,
-    type_id integer references element_types(id) on delete set null,
+    type varchar(128) not null,    
     assessment assessment_type not null,
     config jsonb not null
 );
@@ -48,8 +43,8 @@ create table revisions (
     element_id UUID not null,
     lesson_id UUID not null references lessons(id) on delete cascade,
     parent_id UUID, 
-    type_id integer references element_types(id) on delete set null,
-    assessment assessment_type not null,
+    type varchar(128) not null,    
+    assessment varchar(128) not null,
     config jsonb not null
 );
 
