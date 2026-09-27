@@ -9,12 +9,8 @@ import (
 	"github.com/mrruke12/lms/internal/infrastructure/config"
 )
 
-func Connect(ctx context.Context, cfg *config.DBConfig) *pgxpool.Pool {
-	_ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-
-	defer cancel()
-
-	connString := fmt.Sprintf(
+func ConnString(cfg config.DBConfig) string {
+	return fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=%s",
 		cfg.User,
 		cfg.Password,
@@ -23,6 +19,14 @@ func Connect(ctx context.Context, cfg *config.DBConfig) *pgxpool.Pool {
 		cfg.Database,
 		cfg.SSL,
 	)
+}
+
+func Connect(ctx context.Context, cfg config.DBConfig) *pgxpool.Pool {
+	_ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+
+	defer cancel()
+
+	connString := ConnString(cfg)
 
 	connConfig, err := pgxpool.ParseConfig(connString)
 
