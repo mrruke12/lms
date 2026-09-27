@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/mrruke12/lms/internal/domains/domainerr"
+	"github.com/mrruke12/lms/pkg/storage"
 )
 
 type Lesson struct {
@@ -23,15 +24,38 @@ type Lesson struct {
 	DeletedBy *uuid.UUID
 }
 
+/*
+Constructors
+*/
+
 func NewLesson(authorID uuid.UUID, name string) (*Lesson, error) {
 	if err := isValidName(name); err != nil {
 		return nil, err
 	}
 
 	return &Lesson{
-		name:   name,
-		status: StatusDraft,
+		name:     name,
+		authorID: authorID,
+		status:   StatusDraft,
 	}, nil
+}
+
+func FromRow(scanner storage.Scanner) (*Lesson, error) {
+	l := &Lesson{}
+
+	err := scanner.Scan(
+		&l.id,
+		&l.authorID,
+		&l.version,
+		&l.name,
+		&l.status,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return l, nil
 }
 
 /*
@@ -105,6 +129,10 @@ func (l *Lesson) Version() uuid.UUID {
 
 func (l *Lesson) ID() uuid.UUID {
 	return l.id
+}
+
+func (l *Lesson) AuthorID() uuid.UUID {
+	return l.authorID
 }
 
 func (l *Lesson) Name() string {

@@ -1,6 +1,8 @@
 package user
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 // Base user entity
 type User struct {
@@ -15,6 +17,27 @@ type User struct {
 	surname    string
 	patronymic string
 }
+
+// // Scan from storage
+// func FromRow(scanner storage.Scanner) (*User, error) {
+// 	u := &User{}
+
+// 	err := scanner.Scan(
+// 		&u.id,
+// 		&u.typ,
+// 		&u.login,
+// 		&u.passwordHash,
+// 		&u.name,
+// 		&u.surname,
+// 		&u.patronymic,
+// 	)
+
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	return u, nil
+// }
 
 /*
 Getters
