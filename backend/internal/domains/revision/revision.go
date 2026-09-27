@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/mrruke12/lms/internal/domains/element"
+	"github.com/mrruke12/lms/pkg/storage"
 )
 
 type Revision struct {
@@ -19,6 +20,41 @@ type Revision struct {
 	config     json.RawMessage
 
 	CreatedAt time.Time
+}
+
+/*
+Constructors
+*/
+
+func FromElement(el *element.Element) *Revision {
+	return &Revision{
+		elementID:  el.ID(),
+		lessonID:   el.LessonID(),
+		parentID:   el.ParentID(),
+		typ:        string(el.Type()),
+		assessment: string(el.Assessment()),
+		config:     el.ConfigRaw(),
+	}
+}
+
+func FromRow(scanner storage.Scanner) (*Revision, error) {
+	rev := &Revision{}
+
+	err := scanner.Scan(
+		&rev.elementID,
+		&rev.id,
+		&rev.lessonID,
+		&rev.parentID,
+		&rev.typ,
+		&rev.assessment,
+		&rev.config,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return rev, nil
 }
 
 /*

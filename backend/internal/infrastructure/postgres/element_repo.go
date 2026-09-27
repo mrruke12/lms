@@ -15,7 +15,6 @@ import (
 
 type ElementRepository struct {
 	pool *pgxpool.Pool
-	ref  element.Repository
 }
 
 func (r *ElementRepository) GetByID(ctx context.Context, id uuid.UUID) (*element.Element, error) {
