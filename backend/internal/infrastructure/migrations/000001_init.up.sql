@@ -45,7 +45,8 @@ create table revisions (
     parent_id UUID, 
     type varchar(128) not null,    
     assessment varchar(128) not null,
-    config jsonb not null
+    config jsonb not null,
+    created_at timestamptz not null default now()
 );
 
 create table attempts (

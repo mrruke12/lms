@@ -13,9 +13,9 @@ type CreateLessonCommand struct {
 	Name  string
 }
 
-func (s *Service) CreateLesson(ctx context.Context, cmd CreateLessonCommand) error {
+func (s *Service) CreateLesson(ctx context.Context, cmd CreateLessonCommand) (*lesson.Lesson, error) {
 	if !cmd.Actor.HasRole(auth.RoleTeacher) || !cmd.Actor.HasPermission(auth.PermissionLessonCreate) {
-		return apperr.Error(apperr.CodePermissionDenied, "has no permission to create lessons")
+		return nil, apperr.Error(apperr.CodePermissionDenied, "has no permission to create lessons")
 	}
 
 	l, err := lesson.NewLesson(
@@ -24,14 +24,14 @@ func (s *Service) CreateLesson(ctx context.Context, cmd CreateLessonCommand) err
 	)
 
 	if err != nil {
-		return apperr.Wrap("invalid_lesson", "failed to create lesson", err)
+		return nil, apperr.Wrap("invalid_lesson", "failed to create lesson", err)
 	}
 
 	err = s.lessons.Create(ctx, l)
 
 	if err != nil {
-		return apperr.Wrap("save_failed", "failed to save new lesson", err)
+		return nil, apperr.Wrap("save_failed", "failed to save new lesson", err)
 	}
 
-	return nil
+	return l, nil
 }

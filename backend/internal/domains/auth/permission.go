@@ -11,7 +11,7 @@ const (
 	PermissionLessonRead   Permission = "lesson:read"
 )
 
-var permissionSet = enum.NewSet(
+var PermissionSet = enum.NewSet(
 	PermissionLessonCreate,
 	PermissionLessonUpdate,
 	PermissionLessonDelete,

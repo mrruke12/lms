@@ -113,6 +113,8 @@ func (l *Lesson) SetStatus(status Status) error {
 		return domainerr.NewInvalidStatusTransition(string(l.status), string(status))
 	}
 
+	l.status = status
+
 	return nil
 }
 

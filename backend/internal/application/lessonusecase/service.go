@@ -11,3 +11,11 @@ type Service struct {
 	elements  element.Repository
 	revisions revision.Repository
 }
+
+func NewService(lessons lesson.Repository, elements element.Repository, revisions revision.Repository) *Service {
+	return &Service{
+		lessons:   lessons,
+		elements:  elements,
+		revisions: revisions,
+	}
+}

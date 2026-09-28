@@ -12,6 +12,12 @@ type RevisionRepository struct {
 	pool *pgxpool.Pool
 }
 
+func NewRevisionRepository(pool *pgxpool.Pool) *RevisionRepository {
+	return &RevisionRepository{
+		pool: pool,
+	}
+}
+
 func (r *RevisionRepository) GetByLessonID(ctx context.Context, id uuid.UUID) ([]revision.Revision, error) {
 	sql := `
 		select distinct on (element_id, lesson_id)
@@ -49,10 +55,10 @@ func (r *RevisionRepository) GetByLessonID(ctx context.Context, id uuid.UUID) ([
 }
 
 func (r *RevisionRepository) BulkCreate(ctx context.Context, revs []revision.Revision) error {
-	query := builder.Insert("elements").Columns("element_id", "id", "lesson_id", "parent_id", "type", "assessment", "config")
+	query := builder.Insert("revisions").Columns("element_id", "lesson_id", "parent_id", "type", "assessment", "config")
 
 	for _, rev := range revs {
-		query = query.Values(rev.ElementID(), rev.ID(), rev.LessonID(), rev.ParentID(), rev.Type(), rev.Assessment(), rev.ConfigRaw())
+		query = query.Values(rev.ElementID(), rev.LessonID(), rev.ParentID(), rev.Type(), rev.Assessment(), rev.ConfigRaw())
 	}
 
 	sql, args, err := query.ToSql()

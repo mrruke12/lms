@@ -17,6 +17,12 @@ type ElementRepository struct {
 	pool *pgxpool.Pool
 }
 
+func NewElementRepository(pool *pgxpool.Pool) *ElementRepository {
+	return &ElementRepository{
+		pool: pool,
+	}
+}
+
 func (r *ElementRepository) GetByID(ctx context.Context, id uuid.UUID) (*element.Element, error) {
 	sql := `
 		select id, lesson_id, parent_id, typ, assessment, config

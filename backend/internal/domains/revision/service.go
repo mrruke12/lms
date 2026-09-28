@@ -5,9 +5,13 @@ import (
 	"github.com/mrruke12/lms/internal/domains/element"
 )
 
-// Computes new revisions just for changed elements
-func ComputeRevisions(els []element.Element, revs []Revision) []Revision {
-	res := make([]Revision, 0)
+// Computes new revisions just for changed elements.
+//
+//	return updatedEls, newRevs
+func ComputeRevisions(els []element.Element, revs []Revision) ([]element.Element, []Revision) {
+	var newRevs []Revision
+	var updatedEls []element.Element
+
 	cache := make(map[uuid.UUID]*Revision, len(revs))
 
 	for i := range revs {
@@ -17,13 +21,14 @@ func ComputeRevisions(els []element.Element, revs []Revision) []Revision {
 
 	for i := range els {
 		el := &els[i]
-		rev := cache[el.ID()]
+		rev, exists := cache[el.ID()]
 
 		// if rev is nil then it's a new element so we must create revision, otherwise we create it if there's difference
-		if rev == nil || rev.Differs(el) {
-			res = append(res, *FromElement(el))
+		if !exists || rev.Differs(el) {
+			newRevs = append(newRevs, *FromElement(el))
+			updatedEls = append(updatedEls, *el)
 		}
 	}
 
-	return res
+	return updatedEls, newRevs
 }
